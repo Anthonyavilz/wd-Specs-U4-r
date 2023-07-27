@@ -21,6 +21,7 @@ const getLocalData = () => {
   localStorage.removeItem('token')
   localStorage.removeItem('exp')
   localStorage.removeItem('userId')
+  // By adding these, it allows anything in local storage to be completely clear (which helps fix the navbar loading with the other links rather than the regular two before Auth)
 
   const storedToken = localStorage.getItem('token')
   const storedExp = localStorage.getItem('exp')
