@@ -9,6 +9,7 @@ const AuthContext = createContext({
   logout: () => {},
   userId: null
 })
+// 1*
 
 const calculateRemainingTime = (exp) => {
   const currentTime = new Date().getTime()
@@ -42,7 +43,7 @@ const getLocalData = () => {
     userId: +storedUserId
   }
 }
-
+// 2*
 
 
 export const AuthContextProvider = (props) => {
@@ -54,9 +55,11 @@ export const AuthContextProvider = (props) => {
     initialToken = localData.token
     initialId = localData.userId
   }
+  // 3*
 
   const [token, setToken] = useState(initialToken)
   const [userId, setUserId] = useState(initialId)
+  // 4*
 
 
   const logout = (token, exp, userId) => {
@@ -70,6 +73,7 @@ export const AuthContextProvider = (props) => {
       clearTimeout(logoutTimer)
     }
   }
+  // 5*
 
   const login = (token, exp, userId) => {
     setToken(token)
@@ -82,6 +86,7 @@ export const AuthContextProvider = (props) => {
 
     logoutTimer = setTimeout(logout, remainingTime)
   }
+  // 6*
 
 
   // The logic above is built out so that the values listed below have function and these are what are accessible through props to other files
@@ -92,6 +97,7 @@ export const AuthContextProvider = (props) => {
     logout, 
     userId
   }
+  // 7*
 
   return (
     <AuthContext.Provider value={contextValue}>
@@ -104,3 +110,14 @@ export default AuthContext
 
 // if it's a export default, it's exporting the entire component.
 // If it's exporting a smaller part of it like in the export const above, then it's pulled by destructing it in other files
+
+
+// The story behind this code is starting from the top: 
+// 1* = This syntax allows create a custome hook which will be used across the project. The logic behind that hook is built below
+// 2* = Here with the getLocalData function, it first will remove any instance of data in the localStorage so that any front functionality (the navbar) will work correctly.
+      // After it clears any local stroage it then creates a token, exp, and userId (which will be empty) to be stored in a variable to later usage. It also will create a timer for when those localStroage items will be be removed.
+// 3* = Once we've build some behind the scene functionality for the localStorage parts, we further it by creating empty variables to be used later on.
+// 3*/4* = We then set an instance of those varibales to the localStorage function we created earlier to be the initial values. After we create an inital useState value
+// 5* = In the logout function, we are setting the state values back to null once a user logouts. Then we remove the token, exp, and userId from the localStorage along with clearing the timer that started with the login function
+// 6* = Just like in the logout function, it just doing the opposite with setting a localStorage instance to the useState instance along with starting the timer for those localStorage instances.
+// 7* = Once all the logic is built, we export that by putting into the contextValue which is used to pass into the AuthContext.Provider hook via props (which takes one prop called value)
